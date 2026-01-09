@@ -23,7 +23,7 @@ app.get('/', (req,res) => {
 }); //Peticion
 
 app.get('/api/usuarios', (req,res) => {
-    res.send(['katherine','nicolas','hernan','jeremy']);
+    res.send(usuarios);
 });
 
 
@@ -59,7 +59,28 @@ app.post('/api/usuarios', (req,res) => {
         res.send(usuarios);
     }else{
         res.status(400).send(error.details[0].message);
-    }   
+    }
+});
+
+app.put('/api/usuarios/:id', (req,res) => {
+    //Encontrar si existe el usuario
+    let usuario = usuarios.find((u) => ( u.id === parseInt(req.params.id)));
+    if(!usuario) return res.status(404).send('El usuario no fue encontrado');
+    
+    const schema = Joi.object({
+        nombre: Joi.string().min(3).max(30).required()
+    });
+
+    const { error , value } = schema.validate({ nombre: req.body.nombre });
+    
+    if(error){
+        const mensaje = error.details[0].message;
+        res.status(400).send(mensaje);
+        return;
+    }
+
+    usuario.nombre = value.nombre;
+    res.send(usuario);
 });
 
 const port = process.env.PORT || 3000;
