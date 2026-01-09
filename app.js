@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const Joi = require('joi');
 
 //Para que sirve:
 //Convierte los datos JSON que llegan en las peticiones HTTP 
@@ -42,17 +43,23 @@ app.get('/api/usuarios/:id',(req,res) => {
 })
 
 app.post('/api/usuarios', (req,res) => {
-    if(!req.body.nombre || req.body.nombre.length <= 2){
-        //Bad request
-        res.status(400).send("Debe ingresar un nombre, que tenga un minimo de 3 letras");
-        return;
-    }
-    const usuario = {
-        id: usuarios.length + 1,
-        nombre: req.body.nombre
-    };
-    usuarios.push(usuario);
-    res.send(usuarios);
+
+    const schema = Joi.object({
+        nombre: Joi.string().min(3).max(30).required()
+    });
+
+    const { error , value } = schema.validate({ nombre: req.body.nombre });
+    
+    if(!error){
+        const usuario = {
+            id: usuarios.length + 1,
+            nombre: value.nombre
+        };
+        usuarios.push(usuario);
+        res.send(usuarios);
+    }else{
+        res.status(400).send(error.details[0].message);
+    }   
 });
 
 const port = process.env.PORT || 3000;
