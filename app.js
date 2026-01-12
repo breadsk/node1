@@ -1,4 +1,5 @@
 const express = require('express');
+const logger = require('./logger');
 const app = express();
 const Joi = require('joi');
 
@@ -6,10 +7,20 @@ const Joi = require('joi');
 //Convierte los datos JSON que llegan en las peticiones HTTP 
 // (POST, PUT, etc.) en un objeto JavaScript accesible en req.body.
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
 //Middleware en 1 línea:
 //Es una función que procesa la petición antes 
 // de que llegue a su ruta final.
+
+
+app.use(logger)
+
+app.use(function(req,res,next){
+    console.log("Autenticando....");
+    next();
+})
 
 const usuarios = [
     {id:1,nombre: 'Katherine'},
