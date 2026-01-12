@@ -1,5 +1,7 @@
 const express = require('express');
-const logger = require('./logger');
+const config = require('config');
+//const logger = require('./logger');
+const morgan = require('morgan');
 const app = express();
 const Joi = require('joi');
 
@@ -15,12 +17,24 @@ app.use(express.static('public'));
 // de que llegue a su ruta final.
 
 
-app.use(logger)
+// app.use(function(req,res,next){
+//     console.log("Autenticando....");
+//     next();
+// })
 
-app.use(function(req,res,next){
-    console.log("Autenticando....");
-    next();
-})
+
+//Configuracion de entornos
+//console.log('Entorno detectado por config:', config.util.getEnv('NODE_ENV'));
+
+console.log(`Aplicacion: ${config.get('nombre')}`);
+console.log(`DB server: ${config.get('configDB.host')}`);
+
+
+//Uso de middleware de terceros
+//Para ir probando los tiempos de respuesta
+app.use(morgan('tiny'));
+console.log("Morgan Habilitado");
+
 
 const usuarios = [
     {id:1,nombre: 'Katherine'},

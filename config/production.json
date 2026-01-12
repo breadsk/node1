@@ -1,0 +1,6 @@
+{
+    "nombre" : "Mi Aplicación Express - Producción",
+    "configDB":{
+        "host":"prod-db-server"
+    }
+}

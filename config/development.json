@@ -1,0 +1,6 @@
+{
+    "nombre" : "Mi Aplicación Express - Desarrollo",
+    "configDB":{
+        "host":"prueba-db-server"
+    }
+}
